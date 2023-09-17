@@ -2,15 +2,32 @@ import { Module } from '@nestjs/common';
 import { AppController } from './controllers/app.controller';
 import { AppService } from './app.service';
 import { AnnotationController } from '../annotation/controller/annotation.controller';
-import { TaskController } from '../task/task.controller';
-import { LoginController } from '../login/login.controller';
-import { TaskService } from '../task/task.service';
-import { LoginService } from '../login/login.service';
+import { TaskController } from '../task/controllers/task.controller';
+import { AuthController } from '../auth/controllers/auth.controller';
+import { AuthModule } from 'src/auth/auth.module';
+import { TaskService } from '../task/services/task.service';
 import { AnnotationService } from '../annotation/service/annotation.service';
+import { AuthService } from '../auth/service/auth.service';
+import { UsersService } from 'src/users/users.service';
+import { UsersModule } from 'src/users/users.module';
 
 @Module({
-  imports: [],
-  controllers: [AppController, AnnotationController, TaskController, LoginController],
-  providers: [AppService, TaskService, LoginService, AnnotationService],
+  imports: [
+    AuthModule,
+    UsersModule
+  ],
+  controllers: [
+    AppController, 
+    AnnotationController, 
+    TaskController,
+    AuthController
+  ],
+  providers: [
+    AppService, 
+    TaskService, 
+    AnnotationService,
+    AuthService,
+    UsersService
+  ],
 })
 export class AppModule {}

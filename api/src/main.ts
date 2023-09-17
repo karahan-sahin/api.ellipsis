@@ -33,7 +33,7 @@ async function bootstrap () {
 		//await publishedAtMigration();
 		//await token();
 	}
-	await app.listen(process.env.AI_HTTP_PORT ?? 3000);
+	await app.listen(process.env.HTTP_PORT ?? 3012);
 }
 
 bootstrap();
