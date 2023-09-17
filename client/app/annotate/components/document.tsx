@@ -21,17 +21,17 @@ import { useState } from 'react';
 
 
 interface Document {
-    id: string,
+    _id: string,
     text: string,
-    next: string[],
-    prev: string[],
 }
 
-export default function DocumentBody({ 
-    documents: []
- }) {
+export default function DocumentBody(
+    docs: { documents: Document[] }
+ ) {
 
-    const documents: Document[] = []
+    const { documents } = docs
+
+    console.log(`Retrieved docs ${documents.length}`, 'AnnotateService:DocumentBody')
 
     return (
         documents.map((doc) => 

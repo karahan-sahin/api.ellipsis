@@ -8,7 +8,10 @@ import { signIn, signOut } from 'next-auth/react';
 import Image from 'next/image';
 
 const navigation = [
+  { name: 'Login', href: '/' },
   { name: 'Annotate', href: '/annotate' },
+  { name: 'Tasks', href: '/task' },
+  { name: 'Admin', href: '/admin' },
 ];
 
 function classNames(...classes: string[]) {
@@ -26,27 +29,13 @@ export default function Navbar({ user }: { user: any }) {
             <div className="flex h-16 justify-between">
               <div className="flex">
                 <div className="flex flex-shrink-0 items-center">
-                  <svg
-                    width="32"
-                    height="32"
-                    viewBox="0 0 32 32"
-                    fill="none"
-                    className="text-gray-100"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <rect
-                      width="100%"
-                      height="100%"
-                      rx="16"
-                      fill="currentColor"
-                    />
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M17.6482 10.1305L15.8785 7.02583L7.02979 22.5499H10.5278L17.6482 10.1305ZM19.8798 14.0457L18.11 17.1983L19.394 19.4511H16.8453L15.1056 22.5499H24.7272L19.8798 14.0457Z"
-                      fill="black"
-                    />
-                  </svg>
+                  <Image
+                      className="rounded-full"
+                      src={user?.image || 'https://upload.wikimedia.org/wikipedia/en/7/76/Bo%C4%9Fazi%C3%A7i_University_logo.svg'}
+                      height={32}
+                      width={32}
+                      alt={`${user?.name || 'placeholder'} avatar`}
+                      />
                 </div>
                 <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
                   {navigation.map((item) => (
@@ -66,7 +55,7 @@ export default function Navbar({ user }: { user: any }) {
                   ))}
                 </div>
               </div>
-              <div className="hidden sm:ml-6 sm:flex sm:items-center">
+              <div className="hidden sm:ml-1 sm:flex sm:items-center">
                 <Menu as="div" className="relative ml-3">
                   <div>
                     <Menu.Button className="flex rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2">
