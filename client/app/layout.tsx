@@ -1,9 +1,12 @@
 import './globals.css';
 
-import { Analytics } from '@vercel/analytics/react';
 import Nav from './nav';
-import Toast from './toast';
 import { Suspense } from 'react';
+import { getServerSession } from 'next-auth';
+import { Analytics } from '@vercel/analytics/react';
+import { authOptions } from '../pages/api/auth/[...nextauth]';
+import { redirect } from 'next/navigation';
+import AuthProvider from './login/AuthProvider';
 
 export const metadata = {
   title: 'Ellipsis Annotation Interface',
@@ -16,13 +19,18 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
+  const session = await getServerSession(authOptions)
+
   return (
     <html lang="en" className="h-[calc(100vh-1600px)] bg-gray-50">
-      <body className="h-[calc(100vh-1600px)]">
+      <body className="h-[calc(100vh-1600px)]" suppressHydrationWarning={true}>
         <Suspense>
           <Nav />
         </Suspense>
-        {children}
+        <AuthProvider>
+          {children}
+        </AuthProvider>
         <Analytics />
       </body>
     </html>

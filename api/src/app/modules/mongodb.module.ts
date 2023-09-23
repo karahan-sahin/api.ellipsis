@@ -14,7 +14,7 @@ export class MongoDbModule {
 					useFactory: async (): Promise<Db> => {
 						try {
 							if (!process.env.MONGODB_URI) throw new Error('MONGODB_URI_NOT_FOUND');
-							const client = new MongoClient(process.env.AI_MONGODB_URI, { monitorCommands: true });
+							const client = new MongoClient(process.env.MONGODB_URI, { monitorCommands: true });
 							client.on('connectionReady', () => Logger.verbose('MongoDB connection success.', 'MongoDbModule'));
 							const db = client.db();
 							if (!db) throw new Error('MONGODB_DB_NOT_FOUND');

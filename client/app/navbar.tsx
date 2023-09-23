@@ -8,7 +8,7 @@ import { signIn, signOut } from 'next-auth/react';
 import Image from 'next/image';
 
 const navigation = [
-  { name: 'Login', href: '/' },
+  { name: 'Annotate', href: '/' },
   { name: 'Annotate', href: '/annotate' },
   { name: 'Tasks', href: '/task' },
   { name: 'Admin', href: '/admin' },
@@ -132,6 +132,7 @@ export default function Navbar({ user }: { user: any }) {
                   key={item.name}
                   as="a"
                   href={item.href}
+                  disabled={user ? true: false}
                   className={classNames(
                     pathname === item.href
                       ? 'bg-slate-50 border-slate-500 text-slate-700'

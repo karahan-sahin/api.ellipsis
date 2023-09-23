@@ -33,7 +33,7 @@ export class TaskBody {
 }
 
 
-export class ListBody {
+export class DocumentListQuery {
 
 	@ApiProperty({
 		default: '001',
@@ -48,20 +48,43 @@ export class ListBody {
 			'The list of strings containing keywords describing a topic',
 	})
     @Min(1)
-	page: number;
+	page: string;
 
     @ApiProperty({
 		default: 6,
 		description:
 			'The list of strings containing keywords describing a topic',
 	})
-    limit: number;
+    limit: string;
 
     @ApiProperty({
-		default: '001',
+		default: 'First Task',
 		description:
 			'The userId of the',
 	})
 	task: string;
 
+}
+
+export class DocumentBody {
+
+	candidate_id: string;
+	candidate_text: string;
+
+}
+
+
+export class InstanceBody {
+
+	_id: string;
+	candidate_id: string;
+	candidate_text: string;
+	previous_context: string[];
+	next_context: string[];
+	provenance: string;
+	annotation: string[];
+	acquisition_method: string;
+	timestamp: string;
+	parse: string;
+	human_annotation_status: string;
 }

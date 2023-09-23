@@ -10,11 +10,15 @@ import { AnnotationService } from '../annotation/service/annotation.service';
 import { AuthService } from '../auth/service/auth.service';
 import { UsersService } from 'src/users/users.service';
 import { UsersModule } from 'src/users/users.module';
+import { MongoDbModule } from './modules/mongodb.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
     AuthModule,
-    UsersModule
+    UsersModule,
+    ConfigModule.forRoot({ envFilePath: '.env', isGlobal: true }),
+    MongoDbModule.register(),
   ],
   controllers: [
     AppController, 

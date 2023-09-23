@@ -20,9 +20,15 @@ import { TrashIcon } from '@heroicons/react/24/solid';
 import { useState } from 'react';
 
 
-export default function AnnotationForm({ 
-    annotations: [],
- }) {
+interface Annotation {
+    _id: string,
+    type: string,
+    grammaticality: boolean,
+  };
+  
+
+export default function AnnotationForm(
+    annotations: Annotation[] | undefined ) {
 
     const ellipticalTypes = [
         'No Ellipsis',
@@ -47,8 +53,8 @@ export default function AnnotationForm({
     ])
 
     return (
-        <div className="overflow-y-scroll overscroll-contain max-h-[calc(100vh-300px)]">
-
+        <div className="overflow-y-scroll overscroll-contain max-h-[calc(100vh-300px)] text-xs">
+            
             <Card>
             <div className='gap-6 mb-2'>
                 <Subtitle>Elliptical Type</Subtitle>

@@ -14,30 +14,30 @@ import {
     Select,
     SelectItem,
     TextInput,  
-    Icon} from '@tremor/react';
+    Icon,
+    Bold} from '@tremor/react';
 
 import { TrashIcon } from '@heroicons/react/24/solid';
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 
 
 interface Document {
-    _id: string,
-    text: string,
+    candidate_id: string,
+    candidate_text: string,
 }
 
-export default function DocumentBody(
-    docs: { documents: Document[] }
- ) {
+export default function DocumentBody( documents: Document[], activeIdx: int, setActiveIdx: SetStateAction ) {
 
-    const { documents } = docs
+    activeIdx=3
+    if (documents) {
 
-    console.log(`Retrieved docs ${documents.length}`, 'AnnotateService:DocumentBody')
+        console.log(`Retrieved docs ${JSON.stringify(documents)}`, 'AnnotateService:DocumentBody')
 
-    return (
-        documents.map((doc) => 
-        <div className="mt-8">
-            <Card className='h-20'>{doc.text}</Card>
-        </div>
-        )
-    );
+        return (
+            Object.values(documents).map((doc, idx) => 
+            <div onClick={() => {console.log(idx); setActiveIdx(idx)}} key={idx} className="mt-4 hover:outline-1">
+                <Card className='h-20 hover:outline-1 tremor-shadow-card'  decoration={activeIdx == idx ? 'top' : undefined}>{doc?.candidate_text}</Card>
+            </div>
+            )
+        );}
 }
