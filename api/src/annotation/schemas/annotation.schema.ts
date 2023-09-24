@@ -8,10 +8,42 @@ export class AnnotationBody {
 	@ApiProperty({
 		default: '001',
 		description:
-			'The userId of the',
+			'The elliptical type of the annotation',
 	})
-	annotationType: string[];
-    
+	elliptical_type: string;
+
+	@ApiProperty({
+		default: '001',
+		description:
+			'The elliptical type of the annotation',
+	})
+	grammaticality: boolean;
+
+	@ApiProperty({
+		default: '001',
+		description:
+			'The elliptical type of the annotation',
+	})
+	correlate_text: string;
+
+	@ApiProperty({
+		default: '001',
+		description:
+			'The elliptical type of the annotation',
+	})
+	question: string;
+
+	@ApiProperty({
+		default: '001',
+		description:
+			'The elliptical type of the annotation',
+	})
+	span: SpanBody[];
+}
+
+
+export class SpanBody {
+	
 }
 
 export class UserBody {
@@ -71,6 +103,28 @@ export class DocumentBody {
 	candidate_id: string;
 	candidate_text: string;
 
+}
+
+
+export class AnnotationPostBody {
+
+	@ApiProperty({
+		description: 'the id of user submitting annotation'
+	})
+	@IsString()
+	user_id: string
+
+	@ApiProperty({
+		description: 'the id of user submitting annotation'
+	})
+	@IsString()
+	task_id: string
+
+	@ApiProperty({
+		description: 'the list of annotation submitted'
+	})
+	@IsArray()
+	annotations: AnnotationBody[];
 }
 
 

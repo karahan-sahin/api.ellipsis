@@ -23,5 +23,10 @@ export class AnnotationController {
         return this.annotationService.list(query.task, query._id, parseInt(query.page), parseInt(query.limit) )
     }
 
+    @ApiOperation({ summary: 'Fetch candidate documents' })
+    @Post('/annotate/') 
+    async annotate (@Body() body: DocumentListQuery ) {
+        return this.annotationService.list( body.an )
+    }
 
 }

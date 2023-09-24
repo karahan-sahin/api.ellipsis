@@ -15,10 +15,11 @@ import {
     SelectItem,
     TextInput,  
     Icon,
-    Bold} from '@tremor/react';
+    Bold,
+    Badge} from '@tremor/react';
 
 import { TrashIcon } from '@heroicons/react/24/solid';
-import { SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
 
 interface Document {
@@ -26,17 +27,36 @@ interface Document {
     candidate_text: string,
 }
 
-export default function DocumentBody( documents: Document[], activeIdx: int, setActiveIdx: SetStateAction ) {
+const STATUS_MAP = {
 
-    activeIdx=3
+    'STATUS_CODE_100': 'red',
+    'STATUS_CODE_105': 'yellow',
+    'STATUS_CODE_200': 'green',
+    'STATUS_CODE_400': 'red',
+
+}
+
+interface Prop {
+
+    documents: Document[],
+    activeIdx: number,
+    setActiveIdx: Dispatch<SetStateAction<number>>,
+
+}
+
+export default function DocumentBody( props: Prop ) {
+
+    const { documents , activeIdx, setActiveIdx } = props;
+
     if (documents) {
-
-        console.log(`Retrieved docs ${JSON.stringify(documents)}`, 'AnnotateService:DocumentBody')
-
         return (
             Object.values(documents).map((doc, idx) => 
             <div onClick={() => {console.log(idx); setActiveIdx(idx)}} key={idx} className="mt-4 hover:outline-1">
-                <Card className='h-20 hover:outline-1 tremor-shadow-card'  decoration={activeIdx == idx ? 'top' : undefined}>{doc?.candidate_text}</Card>
+                <Card className='h-20 hover:outline-1 tremor-shadow-card flex row-auto justify-between'  decoration={activeIdx == idx ? 'top' : undefined}>
+                    <p>{doc?.candidate_text}</p> 
+                    <Badge color={STATUS_MAP[doc?.human_annotation_status]}>{doc?.human_annotation_status}</Badge>
+                </Card>
+                
             </div>
             )
         );}

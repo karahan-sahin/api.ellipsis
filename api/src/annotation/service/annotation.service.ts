@@ -31,6 +31,11 @@ export class AnnotationService {
         .collection<TaskBody>('tasks')
         .findOne({ task_name: task });
 
+      
+      console.log(task, user, page, limit, 'Skip', (page - 1) * limit, 'Limit', (page - 1) * limit > taskQuery.limit
+      ? taskQuery.limit % limit
+      : limit)
+
       const docs = await this.db
         .collection('instances')
         .aggregate<DocumentBody>([
@@ -39,11 +44,11 @@ export class AnnotationService {
           //     { $in : { '$annotation.acquisition_method' : taskQuery.acquisition_method } },
           //     { $or : [ { '$human_annotation_status' : 'STATUS_CODE_105' }, { '$human_annotation_status' : 'STATUS_CODE_100' } ]},
           // ] } },
-
           {
             $project: {
               candidate_id: 1,
               candidate_text: 1,
+              human_annotation_status: 1,
             },
           },
           { $skip: (page - 1) * limit },
@@ -94,7 +99,7 @@ export class AnnotationService {
         .collection('tasks')
         .findOneAndUpdate(
         { task_name: task_name },
-        { human_annotation_status: { $set:  ? 'STATUS_CODE_105' } }
+        { human_annotation_status: { $set:  'STATUS_CODE_105' } }
         );
 
 

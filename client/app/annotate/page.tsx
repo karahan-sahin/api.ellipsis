@@ -22,7 +22,7 @@ import {
   TabPanel
 } from '@tremor/react';
 import AnnotationForm from './components/form';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import {
   IdentificationIcon,
   BackwardIcon,
@@ -37,13 +37,14 @@ import { redirect } from 'next/navigation';
 
 interface Annotation {
   _id: string;
+  annotation_type: string;
   type: string;
   grammaticality: boolean;
 }
 
 interface Document {
-  _id: string;
-  text: string;
+  candidate_id: string;
+  candidate_text: string;
 }
 
 export default function AnnotationPage() {
@@ -57,31 +58,57 @@ export default function AnnotationPage() {
 
   const [p, setPage] = useState(1);
   const [l, setLimit] = useState(6);
-  const [activeIdx, setActiveIdx] = useState(6);
-  const [documents, setDocs] = useState<Document[]>([]);
   const [task, setTask] = useState<string | undefined>();
+  const [documents, setDocs] = useState<Document[]>([]);
+  const [activeIdx, setActiveIdx] = useState(0);
   const [annotations, setAnnotations] = useState<Annotation[]>([]);
 
   const user_id = '001';
 
-  async function getDocuments(task_name: string) {
+  console.log('Fact check', annotations?.length === 0)
+
+  async function list(task_name: string | undefined, page: int) {
     try {
       const { data } = await axios.get(
-        // process.env.API_URI ?
-        `http://localhost:3012/annotation/list/?_id=${user_id}&page=${p}&limit=${l}&task=${task_name}`
-        // `${process.env.API_URI}annotation/list/?_id=${user_id}&page=${p}&limit=${l}`,
+        // TODO: Fetch with env uri
+        `http://localhost:3012/annotation/list/?_id=${user_id}&page=${page}&limit=${l}&task=${task_name}`
       );
+      
       return data;
     } catch (error) {
       return [];
     }
   }
 
-  const fetch = async (task_name: string) => {
-    const docs = await getDocuments(task_name);
-    console.log('The documents are ', documents);
+  async function push() {
+    try {
+      const { data } = await axios.post(
+        // TODO: Fetch with env uri
+        `http://localhost:3012/annotation/annotate/`,
+        {
+          user_id: user_id,
+          task_name: task,
+          annotations: annotations
+        }
+      );
+    } catch (error) {
+      console.log(error)
+      return [];
+    }
+  }
+
+  const fetch = async (task_name: string | undefined, page: int) => {
+    if (task !== undefined) {
+      const docs = await list(task_name, page);
+      setDocs(docs)
+    }
   };
 
+  useEffect(() => {
+    fetch(task, p)
+  }, [])
+
+  // TODO: Fetch from task api
   const tasks = ['First Task', 'Task 2', 'Task 3'];
 
   return (
@@ -93,7 +120,8 @@ export default function AnnotationPage() {
             value={task}
             onValueChange={(val) => {
               setTask(val);
-              fetch(val);
+              fetch(val, p);
+              console.log('Initial state at', p)
             }}
             className="gap-6"
           >
@@ -119,14 +147,13 @@ export default function AnnotationPage() {
                     <Card>
                       <div className="flex row-auto gap-2 mb-2">
                         <Subtitle>Document ID:</Subtitle>
-                        <Badge icon={IdentificationIcon}>seed_0</Badge>
+                        <Badge icon={IdentificationIcon}>{documents[activeIdx]?.candidate_id}</Badge>
                       </div>
-                      <Accordion>
-                        <AccordionList>
-                          <AnnotationForm {...annotations} />
-                        </AccordionList>
-                      </Accordion>
-                      <Button className="gap-1 mt-6">
+
+                      <AnnotationForm 
+                        {...{annotations,setAnnotations}} />
+    
+                      <Button onClick={push} className="gap-1 mt-6">
                         Submit Annotation(s)
                       </Button>
                     </Card>
@@ -147,7 +174,8 @@ export default function AnnotationPage() {
                   disabled={p > 1 ? false : true}
                   onClick={() => {
                     setPage(1);
-                    fetch(task);
+                    console.log('Most backward at', p)
+                    fetch(task, 1);
                   }}
                 />
                 <Button
@@ -157,7 +185,8 @@ export default function AnnotationPage() {
                   disabled={p > 1 ? false : true}
                   onClick={() => {
                     setPage(p - 1);
-                    fetch(task);
+                    console.log('One backward at', p-1)
+                    fetch(task, p-1);
                   }}
                 />
               </div>
@@ -173,7 +202,8 @@ export default function AnnotationPage() {
                   icon={ChevronRightIcon}
                   onClick={() => {
                     setPage(p + 1);
-                    fetch(task);
+                    console.log('One forward at', p+1)
+                    fetch(task, p+1);
                   }}
                 />
                 <Button
@@ -182,7 +212,7 @@ export default function AnnotationPage() {
                   icon={ForwardIcon}
                   onClick={() => {
                     setPage(p + 1);
-                    fetch(task);
+                    fetch(task, p+1);
                   }}
                 />
               </div>
@@ -191,7 +221,7 @@ export default function AnnotationPage() {
             <Card className="h-[calc(100vh-140px)] overflow-y-scroll">
               {documents ? (
                 <DocumentBody 
-                  {...documents}
+                  {...{documents,activeIdx,setActiveIdx}}
                 />
               ) : undefined}
             </Card>
